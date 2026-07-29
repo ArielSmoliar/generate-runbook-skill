@@ -6,6 +6,8 @@ It produces procedures with explicit preservation requirements, verification, ap
 
 Current version: `0.2.0`. Licensed under Apache 2.0.
 
+[Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](docs/support.md)
+
 ## Codex marketplace
 
 Add the public marketplace and install the plugin:
