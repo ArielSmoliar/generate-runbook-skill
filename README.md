@@ -4,7 +4,7 @@ A portable Codex and Claude Code plugin for creating, reviewing, validating, dry
 
 It produces procedures with explicit preservation requirements, verification, approval gates, stop conditions, evidence rules, and rollback coverage.
 
-Current version: `0.2.0`. Licensed under Apache 2.0.
+Current version: `0.2.1`. Licensed under Apache 2.0.
 
 [Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](docs/support.md)
 
@@ -48,7 +48,7 @@ Users who prefer the standalone skill can still install it without the plugin la
 Clone the release source:
 
 ```bash
-git clone --branch v0.2.0 --depth 1 \
+git clone --branch v0.2.1 --depth 1 \
   https://github.com/ArielSmoliar/generate-runbook-skill.git
 cd generate-runbook-skill
 ```

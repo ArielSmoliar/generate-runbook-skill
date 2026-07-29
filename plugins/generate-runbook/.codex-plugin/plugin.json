@@ -1,6 +1,6 @@
 {
   "name": "generate-runbook",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create and validate safety-gated operational runbooks.",
   "author": {
     "name": "Ariel Smoliar",
@@ -23,6 +23,8 @@
     "longDescription": "Generate, review, dry-run, execute, validate, and audit operational runbooks with preservation requirements, approval gates, verification, stop conditions, evidence rules, and rollback coverage.",
     "developerName": "Ariel Smoliar",
     "category": "Productivity",
+    "composerIcon": "./assets/composer-icon.png",
+    "logo": "./assets/logo.png",
     "capabilities": [
       "Write"
     ],
