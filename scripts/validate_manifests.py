@@ -33,7 +33,6 @@ def main() -> int:
     assert codex_market["plugins"][0]["name"] == "generate-runbook"
     assert claude_market["plugins"][0]["name"] == "generate-runbook"
     assert claude_market["plugins"][0]["version"] == version
-    assert not list(ROOT.rglob("__pycache__")), "release tree contains __pycache__"
     print("Plugin and marketplace manifests are valid")
     return 0
 

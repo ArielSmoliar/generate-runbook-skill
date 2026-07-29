@@ -22,6 +22,13 @@ jobs:
       - name: Compile scripts
         run: python -m py_compile plugins/generate-runbook/skills/generate-runbook/scripts/*.py scripts/*.py
 
+      - name: Reject committed generated files
+        run: |
+          if git ls-files | grep -E '(^|/)(__pycache__/|[^/]+\.pyc$)'; then
+            echo "Generated Python cache files must not be committed."
+            exit 1
+          fi
+
       - name: Run tests
         run: python plugins/generate-runbook/skills/generate-runbook/scripts/test_skill.py
 
