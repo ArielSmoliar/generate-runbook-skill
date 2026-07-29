@@ -1,0 +1,25 @@
+{
+  "name": "ariel-smoliar-tools",
+  "owner": {
+    "name": "Ariel Smoliar"
+  },
+  "metadata": {
+    "description": "Operational runbook skills for safe releases, incidents, migrations, and recurring procedures."
+  },
+  "plugins": [
+    {
+      "name": "generate-runbook",
+      "source": "./plugins/generate-runbook",
+      "description": "Create and validate safety-gated operational runbooks.",
+      "version": "0.2.0",
+      "category": "Productivity",
+      "tags": [
+        "runbook",
+        "operations",
+        "incident-response",
+        "deployment",
+        "safety"
+      ]
+    }
+  ]
+}

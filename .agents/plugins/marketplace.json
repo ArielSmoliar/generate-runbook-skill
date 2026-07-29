@@ -1,0 +1,20 @@
+{
+  "name": "ariel-smoliar-tools",
+  "interface": {
+    "displayName": "Ariel Smoliar Tools"
+  },
+  "plugins": [
+    {
+      "name": "generate-runbook",
+      "source": {
+        "source": "local",
+        "path": "./plugins/generate-runbook"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

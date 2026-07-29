@@ -1,0 +1,19 @@
+{
+  "name": "generate-runbook",
+  "version": "0.2.0",
+  "description": "Create and validate safety-gated operational runbooks.",
+  "author": {
+    "name": "Ariel Smoliar",
+    "url": "https://github.com/ArielSmoliar"
+  },
+  "homepage": "https://github.com/ArielSmoliar/generate-runbook-skill",
+  "repository": "https://github.com/ArielSmoliar/generate-runbook-skill",
+  "license": "Apache-2.0",
+  "keywords": [
+    "runbook",
+    "operations",
+    "incident-response",
+    "deployment",
+    "safety"
+  ]
+}

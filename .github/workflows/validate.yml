@@ -20,16 +20,21 @@ jobs:
           python-version: "3.12"
 
       - name: Compile scripts
-        run: python -m py_compile generate-runbook/scripts/*.py scripts/*.py
+        run: python -m py_compile plugins/generate-runbook/skills/generate-runbook/scripts/*.py scripts/*.py
 
       - name: Run tests
-        run: python generate-runbook/scripts/test_skill.py
+        run: python plugins/generate-runbook/skills/generate-runbook/scripts/test_skill.py
 
       - name: Validate template
-        run: python generate-runbook/scripts/validate_runbook.py generate-runbook/assets/runbook-template.md
+        run: |
+          python plugins/generate-runbook/skills/generate-runbook/scripts/validate_runbook.py \
+            plugins/generate-runbook/skills/generate-runbook/assets/runbook-template.md
 
       - name: Check installer targets
-        run: python generate-runbook/scripts/install_skill.py --target all --dry-run
+        run: |
+          python plugins/generate-runbook/skills/generate-runbook/scripts/install_skill.py \
+            --target all \
+            --dry-run
 
       - name: Validate skill metadata
         run: |
@@ -37,7 +42,9 @@ jobs:
           from pathlib import Path
           import re
 
-          skill = Path("generate-runbook/SKILL.md").read_text(encoding="utf-8")
+          skill = Path(
+              "plugins/generate-runbook/skills/generate-runbook/SKILL.md"
+          ).read_text(encoding="utf-8")
           assert skill.startswith("---\n")
           frontmatter = skill.split("---", 2)[1]
           assert re.search(r"^name: generate-runbook$", frontmatter, re.MULTILINE)
@@ -46,8 +53,11 @@ jobs:
           print("Skill metadata is valid")
           PY
 
+      - name: Validate Codex plugin
+        run: python scripts/validate_manifests.py
+
       - name: Build deterministic release archive
         run: |
           python scripts/build_release.py --output /tmp/release-one
           python scripts/build_release.py --output /tmp/release-two
-          cmp /tmp/release-one/generate-runbook-v0.1.0.zip /tmp/release-two/generate-runbook-v0.1.0.zip
+          cmp /tmp/release-one/generate-runbook-v0.2.0.zip /tmp/release-two/generate-runbook-v0.2.0.zip

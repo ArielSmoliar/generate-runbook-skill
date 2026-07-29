@@ -1,0 +1,36 @@
+{
+  "name": "generate-runbook",
+  "version": "0.2.0",
+  "description": "Create and validate safety-gated operational runbooks.",
+  "author": {
+    "name": "Ariel Smoliar",
+    "url": "https://github.com/ArielSmoliar"
+  },
+  "homepage": "https://github.com/ArielSmoliar/generate-runbook-skill",
+  "repository": "https://github.com/ArielSmoliar/generate-runbook-skill",
+  "license": "Apache-2.0",
+  "keywords": [
+    "runbook",
+    "operations",
+    "incident-response",
+    "deployment",
+    "safety"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Generate Runbook",
+    "shortDescription": "Create safe, executable operational runbooks.",
+    "longDescription": "Generate, review, dry-run, execute, validate, and audit operational runbooks with preservation requirements, approval gates, verification, stop conditions, evidence rules, and rollback coverage.",
+    "developerName": "Ariel Smoliar",
+    "category": "Productivity",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/ArielSmoliar/generate-runbook-skill",
+    "defaultPrompt": [
+      "Create a deployment runbook for this service.",
+      "Review this runbook for unsafe or missing steps.",
+      "Dry-run this migration procedure without changing state."
+    ]
+  }
+}

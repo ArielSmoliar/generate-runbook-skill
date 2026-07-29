@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a deterministic release archive for the generate-runbook skill."""
+"""Build a deterministic release archive for the Generate Runbook plugin."""
 
 from __future__ import annotations
 
@@ -12,9 +12,15 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-SKILL = ROOT / "generate-runbook"
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)
-EXCLUDED_PARTS = {"__pycache__", ".DS_Store"}
+EXCLUDED_PARTS = {".git", "__pycache__", ".DS_Store", "dist"}
+INCLUDED_ROOTS = (
+    ".agents",
+    ".claude-plugin",
+    ".github",
+    "plugins",
+    "scripts",
+)
 
 
 def included_files() -> list[tuple[Path, str]]:
@@ -23,9 +29,11 @@ def included_files() -> list[tuple[Path, str]]:
         (ROOT / "LICENSE", "LICENSE"),
         (ROOT / "VERSION", "VERSION"),
     ]
-    for path in sorted(SKILL.rglob("*")):
-        if path.is_file() and not EXCLUDED_PARTS.intersection(path.parts):
-            files.append((path, str(Path("generate-runbook") / path.relative_to(SKILL))))
+    for root_name in INCLUDED_ROOTS:
+        root = ROOT / root_name
+        for path in sorted(root.rglob("*")):
+            if path.is_file() and not EXCLUDED_PARTS.intersection(path.parts):
+                files.append((path, str(path.relative_to(ROOT))))
     return files
 
 
