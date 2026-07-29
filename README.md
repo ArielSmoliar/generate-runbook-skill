@@ -8,6 +8,42 @@ Current version: `0.1.0`. Licensed under Apache 2.0.
 
 ## Install
 
+### Ask Codex
+
+```text
+Install the generate-runbook skill from
+https://github.com/ArielSmoliar/generate-runbook-skill/tree/v0.1.0/generate-runbook
+```
+
+### Codex command line
+
+```bash
+python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo ArielSmoliar/generate-runbook-skill \
+  --path generate-runbook \
+  --ref v0.1.0
+```
+
+If the local Python certificate store prevents direct download, use the supported Git transport:
+
+```bash
+python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo ArielSmoliar/generate-runbook-skill \
+  --path generate-runbook \
+  --ref v0.1.0 \
+  --method git
+```
+
+### Codex and Claude Code installer
+
+Clone the release source:
+
+```bash
+git clone --branch v0.1.0 --depth 1 \
+  https://github.com/ArielSmoliar/generate-runbook-skill.git
+cd generate-runbook-skill
+```
+
 Preview the destinations:
 
 ```bash
