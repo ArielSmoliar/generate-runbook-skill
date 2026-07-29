@@ -1,0 +1,53 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile scripts
+        run: python -m py_compile generate-runbook/scripts/*.py scripts/*.py
+
+      - name: Run tests
+        run: python generate-runbook/scripts/test_skill.py
+
+      - name: Validate template
+        run: python generate-runbook/scripts/validate_runbook.py generate-runbook/assets/runbook-template.md
+
+      - name: Check installer targets
+        run: python generate-runbook/scripts/install_skill.py --target all --dry-run
+
+      - name: Validate skill metadata
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          skill = Path("generate-runbook/SKILL.md").read_text(encoding="utf-8")
+          assert skill.startswith("---\n")
+          frontmatter = skill.split("---", 2)[1]
+          assert re.search(r"^name: generate-runbook$", frontmatter, re.MULTILINE)
+          assert re.search(r"^description: .+$", frontmatter, re.MULTILINE)
+          assert "TODO" not in skill
+          print("Skill metadata is valid")
+          PY
+
+      - name: Build deterministic release archive
+        run: |
+          python scripts/build_release.py --output /tmp/release-one
+          python scripts/build_release.py --output /tmp/release-two
+          cmp /tmp/release-one/generate-runbook-v0.1.0.zip /tmp/release-two/generate-runbook-v0.1.0.zip

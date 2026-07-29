@@ -1,0 +1,4 @@
+interface:
+  display_name: "Runbook Generator"
+  short_description: "Create safe, executable operational runbooks"
+  default_prompt: "Use $generate-runbook to create a validated operational runbook for this workflow."
