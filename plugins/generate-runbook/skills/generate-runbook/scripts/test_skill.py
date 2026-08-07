@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -23,6 +24,7 @@ def load_module(name: str, filename: str):
 
 validator = load_module("runbook_validator", "validate_runbook.py")
 installer = load_module("skill_installer", "install_skill.py")
+target_inspector = load_module("repository_target_inspector", "inspect_repository_target.py")
 
 
 class ValidateRunbookTests(unittest.TestCase):
@@ -66,6 +68,100 @@ class InstallerTests(unittest.TestCase):
                 installer.copy_skill(source, root, force=False)
             replaced = installer.copy_skill(source, root, force=True)
             self.assertTrue((replaced / "SKILL.md").is_file())
+
+
+class RepositoryTargetTests(unittest.TestCase):
+    def git(self, path: Path, *args: str) -> str:
+        result = subprocess.run(
+            ["git", "-C", str(path), *args],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return result.stdout.strip()
+
+    def test_exact_branch_and_commit_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary) / "repo"
+            repository.mkdir()
+            self.git(repository, "init", "-b", "main")
+            self.git(repository, "config", "user.email", "test@example.com")
+            self.git(repository, "config", "user.name", "Test")
+            (repository / "tracked.txt").write_text("same tree\n", encoding="utf-8")
+            self.git(repository, "add", "tracked.txt")
+            self.git(repository, "commit", "-m", "initial")
+            head = self.git(repository, "rev-parse", "HEAD")
+
+            report, passed = target_inspector.inspect(
+                repository,
+                target_ref="refs/heads/main",
+                target_commit=head,
+                require_clean=True,
+            )
+
+            self.assertTrue(passed)
+            self.assertEqual(report["branch"], "main")
+            self.assertTrue(report["head_matches_target"])
+            self.assertFalse(report["dirty"])
+            self.assertEqual(report["remote_freshness"], "not required; no fetch performed")
+
+    def test_required_remote_freshness_blocks_without_network_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary) / "repo"
+            repository.mkdir()
+            self.git(repository, "init", "-b", "main")
+            self.git(repository, "config", "user.email", "test@example.com")
+            self.git(repository, "config", "user.name", "Test")
+            self.git(repository, "commit", "--allow-empty", "-m", "initial")
+
+            report, passed = target_inspector.inspect(
+                repository,
+                remote_freshness_required=True,
+            )
+
+            self.assertFalse(passed)
+            self.assertEqual(
+                report["remote_freshness"],
+                "unknown and required; no fetch performed",
+            )
+            self.assertIn(
+                "remote freshness is required but has not been verified",
+                report["failures"],
+            )
+
+    def test_same_tree_wrong_branch_stops_and_finds_target_worktree(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary) / "repo"
+            main_worktree = Path(temporary) / "main-worktree"
+            repository.mkdir()
+            self.git(repository, "init", "-b", "main")
+            self.git(repository, "config", "user.email", "test@example.com")
+            self.git(repository, "config", "user.name", "Test")
+            (repository / "tracked.txt").write_text("same tree\n", encoding="utf-8")
+            self.git(repository, "add", "tracked.txt")
+            self.git(repository, "commit", "-m", "initial")
+            self.git(repository, "switch", "-c", "feature")
+            self.git(repository, "commit", "--allow-empty", "-m", "feature identity")
+            feature_head = self.git(repository, "rev-parse", "HEAD")
+            self.git(repository, "worktree", "add", str(main_worktree), "main")
+            main_head = self.git(repository, "rev-parse", "main")
+
+            report, passed = target_inspector.inspect(
+                repository,
+                target_ref="refs/heads/main",
+                target_commit=main_head,
+                require_clean=True,
+            )
+
+            self.assertFalse(passed)
+            self.assertNotEqual(feature_head, main_head)
+            self.assertTrue(report["tree_matches_target"])
+            self.assertFalse(report["head_matches_target"])
+            self.assertTrue(
+                any(Path(item["path"]).resolve() == main_worktree.resolve() for item in report["matching_worktrees"])
+            )
+            self.assertIn("HEAD does not match requested target commit", report["failures"])
+            self.assertIn("current branch is feature, not main", report["failures"])
 
 
 if __name__ == "__main__":

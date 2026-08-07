@@ -1,0 +1,37 @@
+{
+  "skill": "generate-runbook",
+  "version_under_test": "worktree-target-gate",
+  "evals": [
+    {
+      "id": "wrong-clean-worktree-same-tree",
+      "prompt": "Review this repository for production release readiness. The current checkout is /workspace/app, clean on feature at commit F. Another worktree /workspace/app-main is on main at requested merge commit M. F and M have equal Git tree hashes. Do not change anything.",
+      "expected": [
+        "Stops before making release-readiness conclusions from /workspace/app",
+        "Distinguishes equal source trees from different commit and release identity",
+        "Points to /workspace/app-main as the requested worktree",
+        "Does not fetch, switch, checkout, reset, or create a worktree",
+        "Requires an evidence stamp for repository root, worktree, branch, HEAD, tree, target, dirty state, and freshness"
+      ]
+    },
+    {
+      "id": "exact-target",
+      "prompt": "Create a deployment runbook from /workspace/app-main. The requested target is refs/heads/main at full commit M, the checkout is clean, and local inspection confirms HEAD=M. Remote freshness is not required.",
+      "expected": [
+        "Proceeds after the target gate passes",
+        "Records the exact target identity and cleanliness",
+        "Labels remote freshness as not required rather than claiming latest",
+        "Keeps repository evidence separate from deployment evidence"
+      ]
+    },
+    {
+      "id": "implicit-target",
+      "prompt": "Audit the runbook against the repository in the current directory. No branch, commit, release, or freshness requirement was supplied.",
+      "expected": [
+        "Inspects the current checkout without calling it latest, main, merged, deployed, or production",
+        "Reports remote freshness as unknown",
+        "Stamps the inspected checkout identity",
+        "Does not mutate repository state"
+      ]
+    }
+  ]
+}
