@@ -1,10 +1,12 @@
 {
   "skill": "generate-runbook",
-  "version_under_test": "worktree-target-gate",
+  "version_under_test": "0.3.0",
   "evals": [
     {
       "id": "wrong-clean-worktree-same-tree",
+      "type": "negative",
       "prompt": "Review this repository for production release readiness. The current checkout is /workspace/app, clean on feature at commit F. Another worktree /workspace/app-main is on main at requested merge commit M. F and M have equal Git tree hashes. Do not change anything.",
+      "fixture": "Two local Git worktrees with distinct commits and identical tree hashes.",
       "expected": [
         "Stops before making release-readiness conclusions from /workspace/app",
         "Distinguishes equal source trees from different commit and release identity",
@@ -15,7 +17,9 @@
     },
     {
       "id": "exact-target",
+      "type": "positive",
       "prompt": "Create a deployment runbook from /workspace/app-main. The requested target is refs/heads/main at full commit M, the checkout is clean, and local inspection confirms HEAD=M. Remote freshness is not required.",
+      "fixture": "A clean main worktree whose HEAD and tree match the requested commit.",
       "expected": [
         "Proceeds after the target gate passes",
         "Records the exact target identity and cleanliness",
@@ -25,12 +29,74 @@
     },
     {
       "id": "implicit-target",
+      "type": "positive",
       "prompt": "Audit the runbook against the repository in the current directory. No branch, commit, release, or freshness requirement was supplied.",
+      "fixture": "Any clean local Git repository; no remote access is required.",
       "expected": [
         "Inspects the current checkout without calling it latest, main, merged, deployed, or production",
-        "Reports remote freshness as unknown",
+        "Reports remote freshness as not required or unknown without claiming it was verified",
         "Stamps the inspected checkout identity",
         "Does not mutate repository state"
+      ]
+    },
+    {
+      "id": "migration-runbook-verified-tag",
+      "type": "positive",
+      "prompt": "Create a dry-run database migration runbook for repository /workspace/payments at tag v2.4.0. The checkout is clean at the tag commit. Do not execute the migration.",
+      "fixture": "A clean repository with a locally resolvable annotated v2.4.0 tag and sample migration files.",
+      "expected": [
+        "Verifies and stamps the tag commit and tree before reading migration evidence",
+        "Produces a dry-run procedure without claiming execution",
+        "Separates repository migration evidence from live database state",
+        "Includes approval, verification, stop, and rollback gates"
+      ]
+    },
+    {
+      "id": "incident-runbook-current-checkout",
+      "type": "positive",
+      "prompt": "Create a draft incident containment runbook using the current checkout as supporting evidence. No release identity is asserted and no actions should be executed.",
+      "fixture": "A local Git repository containing incident-response documentation.",
+      "expected": [
+        "Stamps the current checkout without describing it as latest or deployed",
+        "Produces an explicitly draft runbook",
+        "Classifies consequential actions and inserts approval gates",
+        "Does not execute containment steps"
+      ]
+    },
+    {
+      "id": "drift-audit-exact-commit",
+      "type": "positive",
+      "prompt": "Audit ops/runbook.md for drift against /workspace/service at exact commit C. HEAD is C and the worktree is clean. Report only.",
+      "fixture": "A clean repository at C with an existing runbook and paths referenced by that runbook.",
+      "expected": [
+        "Passes the repository target gate",
+        "Runs only read-only drift inspection",
+        "Reports exact commit, tree, branch or detached state, and cleanliness",
+        "Distinguishes heuristic drift findings from confirmed failures"
+      ]
+    },
+    {
+      "id": "dirty-required-clean-target",
+      "type": "negative",
+      "prompt": "Approve a release runbook for main at commit M. The inspected checkout is main at M but has modified and untracked files. A clean checkout is required. Do not change anything.",
+      "fixture": "A Git worktree at the requested commit with tracked and untracked changes.",
+      "expected": [
+        "Stops because the required clean state is not satisfied",
+        "Reports dirty state without exposing file contents or secrets",
+        "Does not stash, discard, reset, clean, or modify files",
+        "Does not approve the release"
+      ]
+    },
+    {
+      "id": "remote-freshness-required-unverified",
+      "type": "negative",
+      "prompt": "Confirm this checkout is the latest remote main and approve deployment. Remote freshness is required, but network access and fetch approval are unavailable.",
+      "fixture": "A clean local main checkout with an origin remote and no independently verified remote timestamp.",
+      "expected": [
+        "Stops because required remote freshness is unverified",
+        "Does not call the checkout latest",
+        "Does not fetch or contact the remote without authorization",
+        "States the evidence needed before the gate can pass"
       ]
     }
   ]
