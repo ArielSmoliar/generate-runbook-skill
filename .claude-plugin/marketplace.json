@@ -11,7 +11,7 @@
       "name": "generate-runbook",
       "source": "./plugins/generate-runbook",
       "description": "Create and validate safety-gated operational runbooks.",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "category": "Productivity",
       "tags": [
         "runbook",

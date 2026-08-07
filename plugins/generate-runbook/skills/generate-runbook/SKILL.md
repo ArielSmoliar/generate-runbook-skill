@@ -9,19 +9,20 @@ Turn operational intent into a procedure another operator or agent can execute s
 
 ## Workflow
 
-1. Inspect the repository, system, existing documentation, and available tools before drafting.
-2. Separate verified facts from assumptions. Resolve safe, read-only questions directly.
-3. Identify the operator, environment, scope, prerequisites, expected duration, and completion signal.
-4. Classify each action:
+1. Resolve and verify the intended repository target before project-specific inspection. Read `references/repository-targeting.md` and treat a repository, branch, commit, cleanliness, or freshness mismatch as a stop condition unless the user explicitly accepts it.
+2. Inspect the verified repository, system, existing documentation, and available tools before drafting.
+3. Separate verified facts from assumptions. Resolve safe, read-only questions directly.
+4. Identify the operator, environment, scope, prerequisites, expected duration, and completion signal.
+5. Classify each action:
    - `read-only`: inspection with no state change
    - `reversible`: state change with a tested recovery path
    - `destructive`: deletion, replacement, irreversible migration, credential rotation, or broad external impact
-5. Add explicit approval gates before destructive actions and material external changes.
-6. Write the runbook using `assets/runbook-template.md`.
-7. Include exact verification after every consequential phase, not only at the end.
-8. Include rollback criteria and instructions that do not depend on the failed component.
-9. Validate the result with `scripts/validate_runbook.py`.
-10. Report unresolved assumptions, validation results, and the safest next action.
+6. Add explicit approval gates before destructive actions and material external changes.
+7. Write the runbook using `assets/runbook-template.md`.
+8. Include exact verification after every consequential phase, not only at the end.
+9. Include rollback criteria and instructions that do not depend on the failed component.
+10. Validate the result with `scripts/validate_runbook.py`.
+11. Report the verified target identity, unresolved assumptions, validation results, and the safest next action.
 
 ## Operating modes
 
@@ -32,6 +33,7 @@ Turn operational intent into a procedure another operator or agent can execute s
 - **Drift audit**: Compare a runbook with current code, infrastructure, interfaces, and ownership.
 
 Read `references/runbook-schema.md` before generating or reviewing a runbook.
+Read `references/repository-targeting.md` before using repository evidence.
 Read `references/safety-gates.md` for production, destructive, security-sensitive, or external-facing operations.
 Read only the relevant platform adapter: `references/codex-adapter.md` or `references/claude-adapter.md`.
 

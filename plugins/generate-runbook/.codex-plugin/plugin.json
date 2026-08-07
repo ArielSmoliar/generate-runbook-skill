@@ -1,6 +1,6 @@
 {
   "name": "generate-runbook",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Create and validate safety-gated operational runbooks.",
   "author": {
     "name": "Ariel Smoliar",
