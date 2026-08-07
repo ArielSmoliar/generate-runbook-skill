@@ -67,4 +67,5 @@ jobs:
         run: |
           python scripts/build_release.py --output /tmp/release-one
           python scripts/build_release.py --output /tmp/release-two
-          cmp /tmp/release-one/generate-runbook-v0.2.1.zip /tmp/release-two/generate-runbook-v0.2.1.zip
+          version="$(tr -d '\n' < VERSION)"
+          cmp "/tmp/release-one/generate-runbook-v${version}.zip" "/tmp/release-two/generate-runbook-v${version}.zip"
