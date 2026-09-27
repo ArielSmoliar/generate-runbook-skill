@@ -9,6 +9,8 @@
 - **Environment:**
 - **Expected duration:**
 - **Change/incident ID:**
+- **Runbook revision:** [Immutable revision or digest of this procedure]
+- **Target artifact:** [Exact build, commit, image digest, or scoped resource identity]
 
 ## Objective
 
@@ -42,16 +44,19 @@
 - Record: [Sanitized evidence]
 - Store in: [Approved location]
 - Never record: [Secrets or private content]
+- Binding: [Artifact, environment, time, evidence type, supported claim and invalidation rule; see the execution record]
 
 ## Procedure
 
 ### Phase 1 — [Name]
 
 1. **Action:** [Atomic action]
+   - **Step ID:** S01
    - **Expected result:** [Observable result]
    - **Verify:** [Exact check]
    - **If verification fails:** [Stop, retry, contain, or escalate]
-   - **Approval required:** [None or gate and approver]
+   - **Approval required:** [Existing grant ID and scope, new gate, or Not required with reason]
+   - **Retry safety:** [Repeat-safe check or reconciliation before retry; attempt limit and timeout]
 
 ## Rollback
 
@@ -74,6 +79,7 @@
 
 ## Record
 
+- **Execution record:** [Path to the durable execution record for this run]
 - **Started:**
 - **Completed:**
 - **Operator:**

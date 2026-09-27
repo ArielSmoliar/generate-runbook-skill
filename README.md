@@ -4,7 +4,12 @@ A portable Codex and Claude Code plugin for creating, reviewing, validating, dry
 
 It produces procedures with explicit preservation requirements, verification, approval gates, stop conditions, evidence rules, and rollback coverage.
 
-Current version: `0.3.0`. Licensed under Apache 2.0.
+Development version: `0.4.0` (release pending). Licensed under Apache 2.0.
+
+Version 0.4 adds draft/ready structural validation, a durable execution record,
+authorization reuse across resumptions, explicit retry reconciliation, and
+evidence bound to exact artifacts and supported claims. These checks do not
+authorize actions or replace live verification.
 
 [Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](docs/support.md)
 
@@ -45,7 +50,7 @@ Claude can also load it automatically for runbook, playbook, SOP, launch checkli
 
 Users who prefer the standalone skill can still install it without the plugin layer.
 
-Clone the release source:
+Clone the published release source (the 0.4.0 development changes are not yet tagged):
 
 ```bash
 git clone --branch v0.3.0 --depth 1 \
@@ -62,6 +67,9 @@ python3 plugins/generate-runbook/skills/generate-runbook/scripts/install_skill.p
 ```
 
 An existing direct installation is preserved unless the user explicitly passes `--force`.
+If both standalone and plugin copies are installed, compare their contents before
+upgrading. Back up local changes and align them to the same verified version;
+do not edit a managed plugin cache to simulate a marketplace update.
 
 ## Validate
 
@@ -73,6 +81,20 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
   plugins/generate-runbook
 claude plugin validate .
 ```
+
+For a completed procedure in the bundled Markdown format:
+
+```bash
+python3 plugins/generate-runbook/skills/generate-runbook/scripts/validate_runbook.py \
+  path/to/runbook.md --mode ready
+```
+
+Draft mode is the default and reports incomplete fields as warnings. Ready mode
+rejects missing operational fields and per-step verification, failure handling,
+approval disposition or retry safety. Neither mode proves semantic correctness,
+authorization or live readiness. Execution records are operator-reviewed, not
+automatically enforced. The drift script checks referenced paths only; live
+deployment, schema and external workflow drift require independent inspection.
 
 ## Release
 
