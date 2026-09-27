@@ -5,7 +5,7 @@ Candidate: 0.4.0, unpublished development changes
 
 ## Deterministic checks
 
-The 21-test Python suite passes. The new cases reject an empty procedure,
+The 24-test Python suite passes. The new cases reject an empty procedure,
 missing operational fields, missing checks in a second step, duplicate step
 IDs, invalid dates/statuses, duplicate sections and unresolved prose template
 placeholders in ready mode. Draft templates remain valid with warnings. Markdown
@@ -18,7 +18,7 @@ Skill metadata, Codex plugin, Claude marketplace and manifest-version checks
 pass. Two independently built release ZIPs compare byte-for-byte equal. Installer
 checks initially used dry runs. A subsequent artifact-level test installed the
 candidate into isolated temporary Codex and Claude directories and ran the
-installed 21-test suite in each. These are standalone directory-layout tests,
+installed skill-script suite in each. These are standalone directory-layout tests,
 not host-app discovery or cross-model behavioral tests. User installations were
 not upgraded to the candidate and no release was published.
 
@@ -46,10 +46,26 @@ stop applies to affected/dependent work while safe independent preparation may
 continue. Repository inspection is explicitly conditional when the user supplies
 artifacts instead of a checkout.
 
-Six reusable behavioral scenarios were added to `evals.json` (14 total). The
+Six reusable behavioral scenarios were initially added to `evals.json`. The
 three combined forward-test requests exercised the new themes; the catalog is
 not an automated end-to-end agent test runner. No comparative success rate or
 production safety claim is made.
+
+## Previous-launch feedback
+
+The reusable template now explicitly names the entry signal, entry verification
+and final go/no-go owner, alongside the existing rollback trigger. The execution
+snapshot records the observed entry signal and decision with evidence and scope.
+Three additional deterministic tests reject missing/blank entry fields, missing
+final authority even when an owner/operator exists, and missing rollback triggers
+even when recovery actions exist. Required inline values cannot be supplied by an
+unrelated checklist following a blank label.
+
+One additional behavioral scenario (15 total) checks an Approved runbook with a
+stale entry signal and operator identity but no established final authority.
+This new scenario is cataloged for the remaining host smoke tests; it has not
+been independently forward-tested. The linter checks field presence, not whether
+the actual entry condition is true or a named person's authority is valid.
 
 ## Limits
 

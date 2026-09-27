@@ -35,6 +35,7 @@ READY_RUNBOOK = """# Disposable service inspection
 - **Status:** Approved
 - **Owner:** Test operator
 - **Operator:** Test operator
+- **Go/no-go owner:** Test operator
 - **Last verified:** 2020-01-01
 - **Environment:** Disposable local fixture
 - **Expected duration:** Two minutes
@@ -54,6 +55,8 @@ Inspect the disposable service and record its health.
 - Service configuration
 
 ## Preconditions
+- **Entry signal:** The requested local health inspection concerns fixture-service-v1.
+- **Entry verification:** Compare the operator request and running fixture identity; both must identify fixture-service-v1.
 - [ ] Operator verifies the fixture is running locally.
 
 ## Risk and stop conditions
@@ -121,6 +124,27 @@ class ReadinessTests(unittest.TestCase):
                 text = re.sub(r"(?m)^(- \*\*" + re.escape(field) + r":\*\*).*$", r"\1", READY_RUNBOOK)
                 errors, _ = self.check(text)
                 self.assertTrue(any(field in error for error in errors), errors)
+
+    def test_entry_signal_and_check_required_beyond_generic_preconditions(self) -> None:
+        for field in ("Entry signal", "Entry verification"):
+            for replacement in ("", "- **" + field + ":**"):
+                with self.subTest(field=field, replacement=replacement):
+                    text = re.sub(r"(?m)^- \*\*" + re.escape(field) + r":\*\*.*$", replacement, READY_RUNBOOK)
+                    # An unrelated generic prerequisite cannot fill the entry check.
+                    errors, _ = self.check(text)
+                    self.assertIn(f"missing populated field: Preconditions / {field}", errors)
+
+    def test_final_decision_owner_required_even_when_owner_and_operator_exist(self) -> None:
+        for replacement in ("", "- **Go/no-go owner:**"):
+            text = re.sub(r"(?m)^- \*\*Go/no-go owner:\*\*.*$", replacement, READY_RUNBOOK)
+            errors, _ = self.check(text)
+            self.assertIn("missing populated field: Metadata / Go/no-go owner", errors)
+
+    def test_rollback_trigger_cannot_be_replaced_by_recovery_actions(self) -> None:
+        for replacement in ("", "- **Trigger:**"):
+            text = re.sub(r"(?m)^- \*\*Trigger:\*\*.*$", replacement, READY_RUNBOOK)
+            errors, _ = self.check(text)
+            self.assertIn("missing populated field: Rollback / Trigger", errors)
 
     def test_each_step_needs_its_own_checks(self) -> None:
         step = READY_RUNBOOK.split("1. **Action:", 1)[1].split("## Rollback", 1)[0]

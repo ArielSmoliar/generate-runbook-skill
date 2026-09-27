@@ -16,6 +16,7 @@ workflow below require the 0.4.0 candidate. Licensed under Apache 2.0.
 
 | Improvement | What it changes |
 |---|---|
+| Entry and decision ownership | Require an observable entry signal, its verification check, a rollback/containment trigger, and an explicit final go/no-go owner before reuse. |
 | Draft and ready validation | Drafts report incomplete fields as warnings. Ready checks reject missing operational details, per-step checks, duplicate step IDs, and unresolved prose placeholders. Ordinary Markdown links are no longer mistaken for placeholders. |
 | Durable execution records | Preserve the current snapshot, completed steps, failed or unknown outcomes, consumed authorizations, and next authorized action across sessions. |
 | Authorization reuse | Continue within existing valid authority. A restart does not replenish spent calls or budget, and an Approved document is not itself an authorization. |
@@ -48,6 +49,7 @@ for the procedure and the [execution-record template](plugins/generate-runbook/s
 for a specific run. The record contains:
 
 - A current snapshot linked to the runbook revision and exact target.
+- The observed entry signal and the go/no-go decision, with its owner and evidence.
 - An authorization ledger with scope, limits, used/reserved capacity, and enforcement location.
 - A step ledger with stable IDs, attempts, outcomes, and evidence references.
 - An evidence register and dated decision history.
@@ -145,10 +147,12 @@ python3 plugins/generate-runbook/skills/generate-runbook/scripts/validate_runboo
 | Mode | Checks and result |
 |---|---|
 | `draft` (default) | Checks required structure and possible secrets; reports incomplete operational fields and prose placeholders as warnings. |
-| `ready` | Also requires populated metadata, scope, risk, evidence, recovery and communication fields; a linked execution record; and numbered actions with unique step IDs, expected results, verification, failure handling, approval disposition, and retry safety. Declared status must be Approved or In progress. |
+| `ready` | Also requires populated metadata including a final go/no-go owner; an entry signal and verification check; scope, risk, evidence, recovery (including a rollback trigger) and communication fields; a linked execution record; and numbered actions with unique step IDs, expected results, verification, failure handling, approval disposition, and retry safety. Declared status must be Approved or In progress. |
 
 Use the bundled Markdown format; update older runbooks to that format before
-using ready mode. Exit codes are `0` for structural success, `1` for validation
+using ready mode. Required fields need a value on the same line as their label;
+the three Scope labels also accept the template's block bullet lists. Exit codes
+are `0` for structural success, `1` for validation
 errors, and `2` when the input cannot be read. Resolve errors and explicitly
 disposition warnings before proceeding.
 
@@ -190,12 +194,12 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 claude plugin validate .
 ```
 
-The 0.4.0 candidate passed 21 skill-script tests, three release-package tests,
+The 0.4.0 candidate passed 24 skill-script tests, three release-package tests,
 and three independent synthetic forward-test requests. Release tests verify
 checksums, reproducibility, packaged README links, and clean standalone installs
 into isolated Codex and Claude directories, including the installed test suite
 and preservation of existing copies. They do not test live discovery or model
-behavior inside either host application. The [evaluation catalog](evals/evals.json) contains 14
+behavior inside either host application. The [evaluation catalog](evals/evals.json) contains 15
 scenarios; it is not an automated end-to-end agent test runner. Read the
 [candidate evaluation report](evals/results-execution-readiness.md) for observed
 behavior and limits. These results do not establish production safety.

@@ -5,6 +5,7 @@
 - **Status:** Draft
 - **Owner:**
 - **Operator:**
+- **Go/no-go owner:** [Person or accountable role with final decision authority]
 - **Last verified:** YYYY-MM-DD
 - **Environment:**
 - **Expected duration:**
@@ -31,6 +32,9 @@
 - [Invariant]
 
 ## Preconditions
+
+- **Entry signal:** [Observable event or condition that makes this procedure applicable now]
+- **Entry verification:** [Exact check and acceptance criterion before starting or reusing this runbook]
 
 - [ ] [Access, approval, backup, dependency, or health check]
 
@@ -60,7 +64,7 @@
 
 ## Rollback
 
-- **Trigger:**
+- **Trigger:** [Observable condition or threshold requiring rollback or containment]
 - **Decision owner:**
 - **Actions:**
 - **Verification:**

@@ -42,6 +42,7 @@ Read `references/execution-and-evidence.md` for execution, resumption, handoff, 
 ## Required qualities
 
 - Make steps atomic, ordered, observable, and attributable.
+- Require an observable entry signal with an exact check, a rollback/containment trigger, and an explicit final go/no-go owner. Verify applicability and decision authority before reuse.
 - Use exact commands only after verifying paths, flags, environment, and scope.
 - Never put secrets, tokens, private content, or reviewer credentials in the runbook.
 - Prefer stable identifiers over UI position or screenshots.

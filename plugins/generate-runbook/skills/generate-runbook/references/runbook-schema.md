@@ -7,6 +7,7 @@ Use these sections in this order. A section may say `Not applicable` only when t
 - Title
 - Status: Draft, Approved, In progress, Complete, or Superseded
 - Owner and operator
+- Go/no-go owner: the person or accountable role with final authority to proceed
 - Last verified date
 - Target environment
 - Expected duration
@@ -14,8 +15,14 @@ Use these sections in this order. A section may say `Not applicable` only when t
 - Immutable runbook revision and exact target artifact/resource identity
 
 Use the field labels in `assets/runbook-template.md` for ready-mode linting.
+Put a value on the same line as each required field label; further details can
+follow on later lines. The three Scope labels also accept the template's block
+bullet lists. Unrelated checklists cannot fill an empty labeled field.
 Use ISO `YYYY-MM-DD` for Last verified. Ready mode accepts Approved or In progress
 status, but independently check the authorization source before execution.
+The owner maintains the runbook; the operator performs it; the go/no-go owner
+decides whether the consequential operation may proceed. One person can hold
+all three roles, but identify the final decision authority explicitly.
 
 ## Objective
 
@@ -28,6 +35,14 @@ List included systems, excluded systems, and invariants that must remain unchang
 ## Preconditions
 
 List access, backups, approvals, health checks, maintenance windows, dependencies, and required isolated test data.
+
+Also require **Entry signal**, the observable condition that makes the procedure
+applicable now, and **Entry verification**, the exact check and acceptance
+criterion for that signal. Preconditions describe what must be available or
+true; they do not replace the reason to start. For an incident the signal may
+be a verified alert; for a release, a specific approved candidate and window;
+for QA or a beta launch, a specified candidate or cohort ready for that procedure.
+Recheck applicability before reuse or resuming a consequential operation.
 
 ## Risk and stop conditions
 
@@ -54,6 +69,9 @@ Commands must be copyable, scoped, and preceded by context when the working dire
 ## Rollback
 
 Define the trigger, decision owner, exact recovery procedure, verification, and limits. If rollback is impossible, state that before execution and provide containment steps.
+Use an observable condition or threshold for **Trigger**, not merely "if needed".
+For a read-only procedure, explain the no-change recovery limit and name the
+condition that requires stopping or containment instead of inventing a rollback.
 
 ## Completion criteria
 

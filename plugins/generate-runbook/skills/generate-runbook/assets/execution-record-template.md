@@ -15,6 +15,8 @@ when targets or approval references are sensitive. Do not store credentials.
 - Next authorized action: [Step ID and scoped action, or None with reason]
 - Blockers and required reconciliation: [Facts, owner and next read-only check]
 - Live state checked at and source: [Timestamp and authoritative query or interface]
+- Entry signal verification: [Observed result, timestamp and evidence ID; unknown until checked]
+- Go/no-go decision: [Go / No-go / Pending; decision owner, time, scope, evidence and authorization reference]
 - Supersedes: [Earlier snapshot/handoff or Initial record]
 
 ## Authorization ledger

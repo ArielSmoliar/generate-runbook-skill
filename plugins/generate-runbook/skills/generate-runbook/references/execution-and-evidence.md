@@ -21,6 +21,22 @@ The record is an audit artifact, not an authorization service or budget enforcer
 5. Continue authorized independent preparation while a dependent step is
    blocked. Report the concrete blocker and next permitted action.
 
+## Entry and final decision
+
+Before starting or reusing a consequential procedure, establish three things:
+the entry signal is currently satisfied, the rollback/containment trigger is
+observable, and a named person or accountable role owns the final go/no-go.
+Record the entry check's result, timestamp and evidence, then the decision,
+decision owner, scope and authorization reference in the execution snapshot.
+
+A prepared procedure or passing linter cannot establish that its entry signal
+is true. If the signal is false, stale or unknown, hold the affected operation
+and use authorized read-only checks to resolve it. Do not invent a decision or
+appoint yourself approver to fill a template. Continue safe independent
+preparation. Reuse an existing go decision only while its evidence, target,
+scope and authority still apply; this does not require a new approval on every
+resume. Honor any explicit action-time approval gate.
+
 ## Authorization without repeated permission loops
 
 Reuse valid authorization for the same action, target, scope and limits. Ask

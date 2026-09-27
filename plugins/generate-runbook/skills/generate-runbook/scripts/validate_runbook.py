@@ -16,9 +16,10 @@ REQUIRED_SECTIONS = (
     "Communications", "Record",
 )
 REQUIRED_FIELDS = {
-    "Metadata": ("Status", "Owner", "Operator", "Last verified", "Environment",
+    "Metadata": ("Status", "Owner", "Operator", "Go/no-go owner", "Last verified", "Environment",
                  "Expected duration", "Change/incident ID", "Runbook revision", "Target artifact"),
     "Scope": ("Included", "Excluded", "Must remain unchanged"),
+    "Preconditions": ("Entry signal", "Entry verification"),
     "Risk and stop conditions": ("Risk", "Stop immediately if"),
     "Evidence plan": ("Record", "Store in", "Never record", "Binding"),
     "Rollback": ("Trigger", "Decision owner", "Actions", "Verification", "Limitations"),
@@ -57,7 +58,7 @@ def prose(text: str) -> str:
 
 
 def field_values(body: str) -> dict[str, str]:
-    """Read template labels, including block labels followed by bullet lists."""
+    """Read inline template values and the three Scope block labels."""
     pattern = re.compile(
         r"^[ \t]*(?:(?:[-*]|\d+\.)[ \t]+)?(?:\*\*)?"
         r"([A-Za-z][A-Za-z /-]*?)(?::(?:\*\*)?|\*\*:?)[ \t]*(.*)$", re.M
@@ -65,10 +66,15 @@ def field_values(body: str) -> dict[str, str]:
     matches = list(pattern.finditer(body))
     values = {}
     for i, match in enumerate(matches):
+        name = normalize_heading(match.group(1))
+        if name not in {"included", "excluded", "must remain unchanged"}:
+            # A generic checklist after a blank field is not that field's value.
+            values[name] = match.group(2).strip()
+            continue
         end = matches[i + 1].start() if i + 1 < len(matches) else len(body)
         # A phase heading must not supply the value of an empty preceding field.
         value = re.split(r"^#{1,6}\s", body[match.start(2):end], maxsplit=1, flags=re.M)[0]
-        values[normalize_heading(match.group(1))] = value.strip()
+        values[name] = value.strip()
     return values
 
 
