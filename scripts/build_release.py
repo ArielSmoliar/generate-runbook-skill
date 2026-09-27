@@ -18,6 +18,8 @@ INCLUDED_ROOTS = (
     ".agents",
     ".claude-plugin",
     ".github",
+    "docs",
+    "evals",
     "plugins",
     "scripts",
 )

@@ -174,6 +174,7 @@ Run the portable checks from the repository root:
 
 ```bash
 python3 plugins/generate-runbook/skills/generate-runbook/scripts/test_skill.py
+python3 scripts/test_release.py
 python3 scripts/validate_manifests.py
 python3 plugins/generate-runbook/skills/generate-runbook/scripts/validate_runbook.py \
   plugins/generate-runbook/skills/generate-runbook/assets/runbook-template.md --mode draft
@@ -189,8 +190,12 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 claude plugin validate .
 ```
 
-The 0.4.0 candidate passed 21 Python tests and three independent synthetic
-forward-test requests. The [evaluation catalog](evals/evals.json) contains 14
+The 0.4.0 candidate passed 21 skill-script tests, three release-package tests,
+and three independent synthetic forward-test requests. Release tests verify
+checksums, reproducibility, packaged README links, and clean standalone installs
+into isolated Codex and Claude directories, including the installed test suite
+and preservation of existing copies. They do not test live discovery or model
+behavior inside either host application. The [evaluation catalog](evals/evals.json) contains 14
 scenarios; it is not an automated end-to-end agent test runner. Read the
 [candidate evaluation report](evals/results-execution-readiness.md) for observed
 behavior and limits. These results do not establish production safety.

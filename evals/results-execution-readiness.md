@@ -16,7 +16,16 @@ missing-file exit codes and the limited structural-pass wording.
 
 Skill metadata, Codex plugin, Claude marketplace and manifest-version checks
 pass. Two independently built release ZIPs compare byte-for-byte equal. Installer
-checks were dry runs; these candidate changes were not installed or published.
+checks initially used dry runs. A subsequent artifact-level test installed the
+candidate into isolated temporary Codex and Claude directories and ran the
+installed 21-test suite in each. These are standalone directory-layout tests,
+not host-app discovery or cross-model behavioral tests. User installations were
+not upgraded to the candidate and no release was published.
+
+The artifact-level check found five broken README links because the ZIP omitted
+`docs/` and `evals/`. Both directories are now included. Three release tests cover
+checksum/reproducibility, packaged links and manifests, clean isolated installs,
+installed script behavior, and existing-copy preservation. CI runs these tests.
 
 ## Independent forward test
 

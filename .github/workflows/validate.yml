@@ -32,6 +32,9 @@ jobs:
       - name: Run tests
         run: python plugins/generate-runbook/skills/generate-runbook/scripts/test_skill.py
 
+      - name: Test release archive and isolated installations
+        run: python scripts/test_release.py
+
       - name: Validate template
         run: |
           python plugins/generate-runbook/skills/generate-runbook/scripts/validate_runbook.py \
