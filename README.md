@@ -27,6 +27,30 @@ Repository targeting remains part of the workflow: verify the intended checkout,
 branch or commit before drawing repository-backed conclusions. Keep source
 inspection separate from deployed state, applied migrations, and production health.
 
+## Before starting or reusing a runbook
+
+Releases, incidents, migrations, QA, and beta launches use the same review
+structure. Every procedure must answer three questions:
+
+| Requirement | Question | Illustrative release example |
+|---|---|---|
+| Entry signal and verification | Why is this procedure applicable now, and what observation confirms it? | Build 42 is the approved candidate and the current 5xx rate is below 1%; record the candidate check, metric query, result, and timestamp. |
+| Rollback or containment trigger | What observable condition requires recovery or a stop? | A 5xx rate above 3% for five minutes triggers the documented recovery procedure. |
+| Final go/no-go owner | Which person or accountable role has authority to proceed? | The designated release lead makes the decision for this candidate and environment, using current evidence and the applicable authorization. |
+
+Choose thresholds for the actual system; the numbers above are examples. For a
+read-only procedure, define when to stop or contain instead of inventing a
+rollback. The maintainer, operator, and final decision owner may be the same
+person, but their responsibilities must be explicit.
+
+Ready-mode validation rejects missing fields. Before execution, independently
+verify the entry signal and decision authority, and record the evidence and
+go/no-go decision in the execution snapshot. A prior successful run or an
+Approved label does not establish that the current entry condition is satisfied.
+If it is false, stale, or unknown, hold the affected operation and continue only
+safe, authorized preparation. Reuse a valid existing decision while its scope,
+evidence, and authorization remain applicable.
+
 ## Use the skill
 
 | Mode | Example request |
