@@ -75,3 +75,32 @@ semantics, or execution-record ledgers. Code examples and inline code are not
 fully parsed for unresolved variables. The existing drift script still checks
 referenced paths only. Budgets and deduplication need verified operator or runtime
 controls; the Markdown record does not enforce them.
+
+## Release-time host check
+
+On 2026-09-27, Codex CLI 0.135.0 completed a generate/validate exercise and a
+separate fresh-session resume exercise using an isolated synthetic local fixture
+and the explicit 0.4.0 plugin source. It generated the three requested documents,
+passed ready-mode validation, preserved S01 as the original successful attempt,
+and completed S02 using existing local-read/documentation authority without a
+duplicate approval request. No external operational mutation was performed.
+
+The resumed run initially set the procedure status to Complete, which ready mode
+rejected. That failure was retained in the evidence history; the reusable
+procedure remained Approved while the execution record marked the run Complete,
+and final ready validation passed. This tests document generation and resumption,
+not production readiness or public-directory discovery. The older CLI also logged
+model-catalog refresh warnings but completed both exercises.
+
+The tested plugin source tree SHA-256 was
+`0471ac1e49b46a7af792bf1fc4029efbf22ce1a566efb5be225205424260d3ec`.
+It hashes sorted relative file paths, a NUL, file bytes, and a NUL per file,
+excluding Python cache files and `.DS_Store`. Both host fixtures were compared
+byte-for-byte with the release plugin source.
+
+A Claude Code 2.1.170 host invocation with the candidate loaded through
+`--plugin-dir` did not return a result or generated artifacts within the bounded
+release check. Claude host generation/resumption remains unverified; successful
+manifest and isolated-install tests must not be described as that behavioral
+check. Public directory installation/discovery remains a separate post-submission
+check for either host.

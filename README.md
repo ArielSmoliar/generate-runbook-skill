@@ -229,6 +229,12 @@ scenarios; it is not an automated end-to-end agent test runner. Read the
 [candidate evaluation report](evals/results-execution-readiness.md) for observed
 behavior and limits. These results do not establish production safety.
 
+A separate Codex CLI smoke generated and validated a synthetic local runbook,
+then resumed it in a fresh session while preserving completed work and existing
+authority. It used the explicit candidate plugin source, not a public-directory
+installation. The Claude Code behavioral smoke returned no completed result;
+Claude host behavior and public-directory discovery remain unverified.
+
 ## Release
 
 Build the deterministic standalone ZIP and SHA-256 checksum:
