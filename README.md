@@ -6,9 +6,9 @@ Create a procedure another operator or agent can follow, verify, and resume.
 Each runbook defines its target, preservation requirements, approval boundaries,
 stop conditions, verification steps, and recovery path.
 
-**Release status:** `0.3.0` is the published version. This branch prepares
-`0.4.0`; it is not yet released. The new validation modes and execution-record
-workflow below require the 0.4.0 candidate. Licensed under Apache 2.0.
+**Version:** `0.4.0`. [Release downloads](https://github.com/ArielSmoliar/generate-runbook-skill/releases/tag/v0.4.0).
+The validation modes and execution-record workflow below require version 0.4.0
+or later. Licensed under Apache 2.0.
 
 [Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](docs/support.md)
 
@@ -125,10 +125,10 @@ Claude can also load it automatically for runbook, playbook, SOP, launch checkli
 
 Users who prefer the standalone skill can still install it without the plugin layer.
 
-Clone the published release source (the 0.4.0 development changes are not yet tagged):
+Clone the versioned release source:
 
 ```bash
-git clone --branch v0.3.0 --depth 1 \
+git clone --branch v0.4.0 --depth 1 \
   https://github.com/ArielSmoliar/generate-runbook-skill.git
 cd generate-runbook-skill
 ```
@@ -153,12 +153,13 @@ align them to the same verified version before relying on either copy.
 
 Back up local customizations before replacing a standalone installation. Update
 the marketplace copy through its plugin manager; do not edit a managed plugin
-cache to simulate an update. Installing the published tag above does not install
-the unreleased 0.4.0 changes.
+cache to simulate an update. The public ChatGPT/Codex directory is a separate
+publication channel; a GitHub release does not update an imported directory
+plugin until its new version is reviewed and published there.
 
 ## Validate a runbook
 
-From a 0.4.0 candidate checkout, use the mode appropriate to the document:
+From a 0.4.0 or later checkout, use the mode appropriate to the document:
 
 ```bash
 python3 plugins/generate-runbook/skills/generate-runbook/scripts/validate_runbook.py \
